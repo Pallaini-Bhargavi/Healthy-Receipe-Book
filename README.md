@@ -3,7 +3,13 @@
 This is a Django-based web application for managing and exploring healthy recipes. Users can register, log in, view a personalized dashboard, explore recipes, manage their favourite recipes, and interact with friends.
 
 ---
+## 🎨 Figma Design
 
+You can view the UI/UX design of this project on Figma:
+
+🔗 [Recipe Book – Figma Design](https://www.figma.com/design/7hQMVe1kb6MXxcdYNZaEnJ/Recipe-Book?node-id=0-1&m=dev&t=223Jw4PPvkYh4RVJ-1)
+
+---
 ## 📸 Screenshots
 
 ### 🔐 Login
