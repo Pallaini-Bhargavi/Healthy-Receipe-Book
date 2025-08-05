@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ recipe.name }} - Procedure</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .card {
+      max-width: 400px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #d2f2d2;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .title {
+      margin-top: 60px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .steps-title {
+      font-weight: bold;
+      margin: 20px 0 10px;
+      font-size: 1.1rem;
+    }
+
+    .steps-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: step-counter;
+    }
+
+    .steps-list li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .steps-list li::before {
+      counter-increment: step-counter;
+      content: counter(step-counter) ".";
+      font-weight: bold;
+      margin-right: 10px;
+      color: #27c267;
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        max-width: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <a href="{% url 'recipe_detail' recipe.id %}" class="back-btn">←</a>
+    <div class="title">{{ recipe.name }}</div>
+    <div class="steps-title">Procedure</div>
+    <ul class="steps-list">
+      {% for step in steps %}
+        <li>{{ step }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>

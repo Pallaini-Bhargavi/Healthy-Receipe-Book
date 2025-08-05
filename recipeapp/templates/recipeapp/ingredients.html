@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ recipe.name }}</title>
+    <script>
+  function getCSRFToken() {
+    return document.cookie.split('; ')
+      .find(row => row.startsWith('csrftoken='))
+      ?.split('=')[1];
+  }
+</script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+    }
+
+    .card {
+      max-width: 400px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #d2f2d2;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .title {
+      margin-top: 60px;
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .stars {
+      color: orange;
+      margin: 5px 0;
+    }
+
+    .dish-img {
+  width: 50%;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 15px;
+  display: block;
+  margin: 10px auto;
+}
+
+    .ingredients-title {
+      font-weight: bold;
+      margin: 15px 0 10px;
+    }
+
+    .ingredients-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: ingredient-counter;
+    }
+
+    .ingredients-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ingredients-list li::before {
+      counter-increment: ingredient-counter;
+      content: counter(ingredient-counter);
+      background: #eee;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      width: 100%;
+      background: #27c267;
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    @media (min-width: 768px) {
+      .card {
+        max-width: 600px;
+      }
+
+      .dish-img {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+ <div class="card">
+  <a href="{% url 'receipes' %}" class="back-btn">←</a>
+
+  <div class="title">{{ recipe.name }}</div>
+  <div class="stars">★★★★★</div>
+  <img src="{% static recipe.image %}" alt="{{ recipe.name }}" class="dish-img">
+
+  <div class="ingredients-title">Ingredients</div>
+  <ul class="ingredients-list">
+    {% for item in ingredients_list %}
+      <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'recipe_procedure' recipe.id %}" class="btn">See directions for preparation</a>
+</div>
+{% load static %}
+<script src="{% static 'js/favorites.js' %}"></script>
+
+</body>
+</html>

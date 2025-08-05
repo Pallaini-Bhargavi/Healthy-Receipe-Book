@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .features {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    flex: 1 1 200px;
+    max-width: 250px;
+    min-width: 200px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+        #notification-content{
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .notifications {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .notifications h3 {
+            color: green;
+        }
+        .clear {
+            float: right;
+            color: gray;
+            cursor: pointer;
+        }
+        .clear {
+    cursor: pointer;
+    color: red;
+    font-size: 0.9em;
+    float: right;
+}
+
+        .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #4ee38d;
+    color: white;
+    border-radius: 10px;
+    position: relative;
+}
+.search-btn{
+    text-decoration: None;
+    font-size: 1rem;
+    border-radius: 10px;
+    padding: 8px 16px;
+    background-color: rgba(126, 124, 124, 0.3);
+    color: white;
+}
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.features a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 6px;
+}
+
+.dropdown-menu a {
+    color: #333;
+    padding: 10px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+.back-button {
+    text-decoration: none;
+    color: white;
+    background-color: #2ecc71;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+    display: inline-block;
+}
+ </style>
+</head>
+<body>
+   <div class="header">
+    <a href="{% url 'login' %}" class="back-button">←</a>
+    <h1>Welcome {{ request.user.username }}!!</h1>
+    <a href="{% url 'search' %}" class="search-btn">Search Recipe →</a>
+    <div class="dropdown">
+        <img src="{% static 'recipeapp/images/profile.jpg' %}" alt="User Avatar" class="avatar" onclick="toggleDropdown()">
+        <div id="dropdownMenu" class="dropdown-menu">
+            <a href="{% url 'account' %}">Account</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+</div>
+   {% if messages %}
+    {% for message in messages %}
+    <div class="alert-box" style="
+        background-color: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    ">
+        {{ message }}
+        <span onclick="this.parentElement.style.display='none'" style="
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            cursor: pointer;
+            color: #155724;
+            font-weight: bold;
+        ">&times;</span>
+    </div>
+    {% endfor %}
+{% endif %}
+
+    <div class="features">
+         <a href="{% url 'receipes' %}">
+        <div class="card">
+            <img src="{% static 'recipeapp/images/recipe_icon.jpeg' %}" alt="Receipes" width="40">
+            <p>Recipes</p>
+        </div></a>
+
+        <div class="card">
+            <a href="{% url 'friends' %}">
+            <img src="{% static 'recipeapp/images/friends_icon.jpeg' %}" alt="Friends" width="40">
+            <p>Friends</p>
+        </div></a>
+
+        <div class="card">
+            <a href="{% url 'favourites' %}">
+            <img src="{% static 'recipeapp/images/heart_icon.jpg' %}" alt="Favourites" width="40">
+            <p>Favourites</p>
+        </div></a>
+    </div>
+
+ <div class="notifications" id="notification-box">
+    <h3>
+        Notifications
+        <span class="clear" onclick="clearNotifications()">Clear notifications</span>
+    </h3>
+    <div id="notification-content">
+        <p>🍽️ Knock Knock!! Food is waiting for you.</p>
+        <p style="color: gray;">Today</p><hr>
+        <p>🥢 Have a good day with good diet.</p>
+        <p style="color: gray;">Yesterday</p>
+    </div>
+</div>
+
+<script>
+    function toggleDropdown() {
+        var menu = document.getElementById("dropdownMenu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    document.addEventListener("click", function(event) {
+        var dropdown = document.querySelector(".dropdown");
+        if (!dropdown.contains(event.target)) {
+            document.getElementById("dropdownMenu").style.display = "none";
+        }
+    });
+    function clearNotifications() {
+    const content = document.getElementById('notification-content');
+    content.innerHTML = '<p style="color: gray;">No notifications.</p>';
+}
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Recipes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+       html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: sans-serif;
+    background-color: #f5f5f5;
+}
+
+.container1 {
+    position: relative;
+    min-height: 60vh;
+    overflow: hidden;
+}
+
+.container1::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("{% static 'recipeapp/images/search_bg.jpg' %}") no-repeat center center/cover;
+    z-index: 0;
+}
+
+.container1 .overlay {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.back-button {
+    text-decoration: none;
+    color: white;
+    background-color: #2ecc71;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    width: fit-content;
+    margin-bottom: 20px;
+}
+
+
+.container1 h2 {
+    font-size: 2.5rem;
+    margin: 10px 0;
+    margin-left: 2rem;
+}
+
+.search-bar {
+    position: relative;
+    width: fit-content;
+    margin-left: 2.5rem;
+}
+
+#searchbar {
+    border-radius: 6px;
+    width: 55rem;
+    height: 3rem;
+    padding-right: 2.5rem;
+    border: none;
+    font-size: 1.2rem;
+    padding-left: 1rem;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.3rem;
+    color: gray;
+    pointer-events: none;
+}
+
+.results {
+    position: relative;
+    z-index: 1;
+    background-color: white;
+    margin-top: -20px;
+    padding: 30px 10px 10px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+    min-height: 37vh;
+    overflow-x: hidden;
+}
+
+
+.features {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.features a {
+    text-decoration: none;
+    color: black;
+    font-size: 22px;
+    display: block;
+    padding: 12px 0;
+}
+
+.features hr {
+    border: 0.5px solid #ccc;
+}
+#suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+
+@media (max-width: 768px) {
+    .container1 h2 {
+        font-size: 1.8rem;
+        margin-left: 1rem;
+    }
+
+    #searchbar {
+        width: 100%;
+        height: 2.6rem;
+        font-size: 1rem;
+    }
+
+    .features a {
+        font-size: 18px;
+        padding: 10px 0;
+    }
+
+    .search-bar {
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container1 {
+        padding: 15px;
+    }
+
+    .back-button {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+
+    .container1 h2 {
+        font-size: 1.5rem;
+        margin-left: 1rem;
+    }
+
+    #searchbar {
+        font-size: 0.9rem;
+    }
+
+    .features a {
+        font-size: 16px;
+    }
+
+    .search-bar {
+        margin-left: 1rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container1">
+    <div class="overlay">
+        <a href="{% url 'dashboard' %}" class="back-button">←</a>
+        <h2>Search By Recipe</h2>
+           <form id="search_recipes" onsubmit="return false;">
+           <div class="search-bar" style="position: relative;">
+           <input type="text" placeholder="What Recipe are you looking for ?" id="searchbar" autocomplete="off">
+                <i class="fa fa-search search-icon"></i>
+           <div id="suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ccc; z-index: 100;">
+           </div>
+  </div>
+</form>
+    </div>
+</div>
+    <div class="results">
+        <div class="features">
+            <a href="{% url 'favourites' %}" >My Favorites →</a>
+            <hr>
+            <a href="{% url 'receipes' %}" > Available →</a>
+            <hr>
+        </div>
+    </div>
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('searchbar');
+  const suggestions = document.getElementById('suggestions');
+
+  function showSuggestions(data) {
+    suggestions.innerHTML = '';
+    if (data.recipes.length === 0) {
+      const noResult = document.createElement('div');
+      noResult.textContent = 'No recipes found';
+      noResult.style.padding = '8px';
+      suggestions.appendChild(noResult);
+      return;
+    }
+
+    data.recipes.forEach(recipe => {
+      const link = document.createElement('a');
+      link.href = recipe.url;
+      link.textContent = recipe.name;
+      link.style.display = 'block';
+      link.style.padding = '8px';
+      link.style.textDecoration = 'none';
+      link.style.color = '#000';
+      link.addEventListener('mouseover', () => link.style.background = '#f0f0f0');
+      link.addEventListener('mouseout', () => link.style.background = 'white');
+      suggestions.appendChild(link);
+    });
+  }
+
+  function fetchSuggestions(query) {
+    if (!query) {
+      suggestions.innerHTML = '';
+      return;
+    }
+
+    fetch(`/search-recipes/?q=${encodeURIComponent(query)}`)
+      .then(response => response.json())
+      .then(data => showSuggestions(data));
+  }
+
+  searchInput.addEventListener('input', function () {
+    const query = searchInput.value.trim();
+    fetchSuggestions(query);
+  });
+
+  // Optional: close suggestions on outside click
+  document.addEventListener('click', function (e) {
+    if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
+      suggestions.innerHTML = '';
+    }
+  });
+});
+</script>
+
+</html>
+

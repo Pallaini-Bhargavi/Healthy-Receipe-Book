@@ -1,0 +1,293 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Account</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+    }
+.profile-header {
+  overflow: hidden;
+  z-index: 1;
+}
+
+    .profile-header {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      background: url("{% static 'recipeapp/images/profile_bg.jpeg' %}") no-repeat center center/cover;
+      text-align: center;
+    }
+
+    .back-btn, .edit-btn {
+      position: absolute;
+      top: 40px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 2;
+      border: none;
+    }
+
+    .back-btn {
+      left: 60px;
+      font-size: 1.5rem;
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .edit-btn {
+      right: 40px;
+      font-size: 1.5rem;
+      background-color: white;
+      color: black;
+    }
+
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid white;
+      object-fit: cover;
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+    }
+
+    .content {
+  background: white;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  margin-top: -10px;
+  padding: 40px 20px 50px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+}
+
+    .section {
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .section h3 {
+      margin-bottom: 10px;
+      color: black;
+    }
+
+    .section p, .section input, .section textarea {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-family: inherit;
+      color: #333;
+      display: none;
+    }
+
+
+    #save-btn {
+      display: none;
+      margin-top: 30px;
+      background-color: #2ecc71;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .content {
+        padding: 60px 60px 200px;
+        margin-top: -10px;
+      }
+
+      .profile-image {
+        width: 180px;
+        height: 180px;
+        bottom: 20px;
+      }
+    }
+    .alert-container {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 80%;
+  max-width: 400px;
+}
+
+.alert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #dff0d8;
+  color: #3c763d;
+  padding: 15px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.alert.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.alert.success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 15px;
+}
+
+  </style>
+</head>
+<body>
+  <div class="profile-header">
+    <a href="{% url 'dashboard' %}" class="back-btn">←</a>
+    <button class="edit-btn" onclick="toggleEdit()">Edit</button>
+    <img src="{% static 'recipeapp/images/profile.jpg' %}" alt="Profile" class="profile-image" id="profile-pic">
+  </div>
+
+  <div class="content">
+    <form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+
+
+<!-- Profile Pic -->
+<input type="file" id="profile-pic-input" name="profile_pic" style="display:none;" accept="image/*">
+
+      <!-- Username -->
+<div class="section">
+  <h3>Username</h3>
+  <p id="username-view">{{ user.username }}</p>
+  <input type="text" name="username" id="username-edit" value="{{ user.username }}" style="display:none;" />
+</div>
+
+
+<!-- About -->
+<div class="section">
+  <h3>About</h3>
+  <p id="about-view">{{ profile.about|default:"Tell us about yourself..." }}</p>
+  <textarea name="about" id="about-edit" rows="4" style="display: none;"></textarea>
+</div>
+
+<!-- Password -->
+<div class="section">
+  <h3>Password</h3>
+  <p id="password-view">********</p>
+  <input type="password" name="password" id="password-edit" style="display:none;" placeholder="Enter new password" />
+</div>
+
+  <!-- Save button -->
+  <button type="submit" id="save-btn" style="display: none;">Save Changes</button>
+</form>
+  </div>
+{% if messages %}
+  <div class="alert-container">
+    {% for message in messages %}
+      <div class="alert {{ message.tags }}">
+        <span class="message-text">{{ message }}</span>
+        <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<script>
+  let isEditing = false;
+function toggleEdit() {
+  const usernameView = document.getElementById('username-view');
+  const usernameEdit = document.getElementById('username-edit');
+  const aboutView = document.getElementById('about-view');
+  const aboutEdit = document.getElementById('about-edit');
+  const passwordView = document.getElementById('password-view');
+  const passwordEdit = document.getElementById('password-edit');
+  const saveBtn = document.getElementById('save-btn');
+
+  if (!isEditing) {
+    // Enter edit mode
+    usernameEdit.value = usernameView.innerText;
+    usernameView.style.display = 'none';
+    usernameEdit.style.display = 'block';
+
+    aboutEdit.value = aboutView.innerText;
+    aboutView.style.display = 'none';
+    aboutEdit.style.display = 'block';
+
+    passwordView.style.display = 'none';
+    passwordEdit.style.display = 'block';
+    passwordEdit.value = '';
+
+    saveBtn.style.display = 'inline-block';
+
+    isEditing = true;
+  } else {
+    // Exit edit mode
+    usernameView.innerText = usernameEdit.value;
+    usernameView.style.display = 'block';
+    usernameEdit.style.display = 'none';
+
+    aboutView.innerText = aboutEdit.value;
+    aboutView.style.display = 'block';
+    aboutEdit.style.display = 'none';
+
+    passwordView.style.display = 'block';
+    passwordEdit.style.display = 'none';
+
+    saveBtn.style.display = 'none';
+
+    isEditing = false;
+  }
+}
+
+  // Profile image preview
+  document.getElementById('profile-pic-input').addEventListener('change', function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('profile-pic').src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Clicking profile image opens file selector
+  document.getElementById('profile-pic').addEventListener('click', function () {
+    document.getElementById('profile-pic-input').click();
+  });
+
+  {% if request.session.password_changed %}
+    alert("Password changed successfully.");
+  {% endif %}
+</script>
+
+</body>
+</html>

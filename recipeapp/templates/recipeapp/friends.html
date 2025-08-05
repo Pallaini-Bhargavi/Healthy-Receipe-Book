@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Friends</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      background-color: #d4f1d4;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      font-size: 24px;
+      color: black;
+    }
+
+    .header h2 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .search-bar {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 12px;
+  padding: 15px 15px;
+  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 1rem;
+  background: transparent;
+}
+
+.search-bar i {
+  color: #888;
+  font-size: 1.2rem;
+  margin-left: 10px;
+}
+
+
+    h4 {
+      color: green;
+      margin: 10px 0;
+      font-size: 1.5rem;
+    }
+
+    .friend-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: white;
+      padding: 18px 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .friend-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .friend-info img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .friend-info .details {
+      line-height: 1.2;
+    }
+
+    .friend-info .details span {
+      display: block;
+    }
+
+    .friend-info .details .name {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .friend-info .details .count {
+      color: gray;
+      font-size: 0.9rem;
+    }
+
+    .remove-btn {
+      background-color: #aaa;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .friend-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .remove-btn {
+        align-self: flex-end;
+      }
+
+      .header h2 {
+        font-size: 1.5rem;
+      }
+
+      .search-bar {
+        padding: 8px 12px;
+      }
+
+      .friend-info .details .name {
+        font-size: 0.95rem;
+      }
+
+      .friend-info .details .count {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <a href="{% url 'dashboard' %}" class="back-btn">←</a>
+      <h2>Friends</h2>
+    </div>
+
+    <div class="search-bar">
+  <input type="text" placeholder="Search Friends">
+  <i class="fas fa-search"></i>
+</div>
+
+    <h4>My Friends</h4>
+<div id="friends-list">
+
+  <div class="friend-card" data-name="Aarav">
+  <div class="friend-info">
+    <img src="{% static 'recipeapp/images/aarav.jpg' %}" alt="Aarav">
+    <div class="details">
+      <span class="name">Aarav</span>
+      <span class="count">78 Friends</span>
+    </div>
+  </div>
+    <button class="remove-btn">Remove Friend</button>
+  </div>
+
+    <div class="friend-card" data-name="Alice">
+      <div class="friend-info">
+        <img src="{% static 'recipeapp/images/alice.jpg' %}" alt="ALice">
+        <div class="details">
+          <span class="name">Alice</span>
+          <span class="count">50 Friends</span>
+        </div>
+      </div>
+      <button class="remove-btn">Remove Friend</button>
+    </div>
+
+
+    <div class="friend-card" data-name="Bob">
+      <div class="friend-info">
+        <img src="{% static 'recipeapp/images/bob.png' %}" alt="Bob">
+        <div class="details">
+          <span class="name">Bob</span>
+          <span class="count">190 Friends</span>
+        </div>
+      </div>
+      <button class="remove-btn">Remove Friend</button>
+    </div>
+
+
+  <div class="friend-card" data-name="Olivia">
+  <div class="friend-info">
+    <img src="{% static 'recipeapp/images/olivia.jpeg' %}" alt="Olivia">
+    <div class="details">
+      <span class="name">Olivia</span>
+      <span class="count">78 Friends</span>
+    </div>
+  </div>
+  <button class="remove-btn">Remove Friend</button>
+</div>
+
+    <div class="friend-card" data-name="Riya">
+      <div class="friend-info">
+        <img src="{% static 'recipeapp/images/riya.webp' %}" alt="Riya">
+        <div class="details">
+          <span class="name">Riya</span>
+          <span class="count">10 Friends</span>
+        </div>
+      </div>
+      <button class="remove-btn">Remove Friend</button>
+    </div>
+
+</div>
+  </div>
+  <p id="no-friends-msg" style="display:none; text-align:center; color:gray; font-style:italic; font-size:1.2rem;">
+  No friends available
+</p>
+<p id="no-match-msg" style="display:none; text-align:center; color:gray; font-style:italic; font-size:1.2rem;">
+  No friend found
+</p>
+<script>
+  const friendsList = document.getElementById('friends-list');
+  const noFriendsMsg = document.getElementById('no-friends-msg');
+  const noMatchMsg = document.getElementById('no-match-msg');
+  const searchInput = document.querySelector('.search-bar input');
+
+  function checkEmpty() {
+    const visibleCards = document.querySelectorAll('.friend-card:not([style*="display: none"])');
+    if (friendsList.children.length === 0) {
+      noFriendsMsg.style.display = 'block';
+      noMatchMsg.style.display = 'none';
+    } else if (visibleCards.length === 0) {
+      noMatchMsg.style.display = 'block';
+      noFriendsMsg.style.display = 'none';
+    } else {
+      noFriendsMsg.style.display = 'none';
+      noMatchMsg.style.display = 'none';
+    }
+  }
+
+  // Search as you type
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    let hasVisible = false;
+
+    document.querySelectorAll('.friend-card').forEach(card => {
+      const name = card.dataset.name.toLowerCase();
+      if (name.includes(query)) {
+        card.style.display = 'flex';
+        hasVisible = true;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    checkEmpty();
+  });
+
+  // Remove friend
+  document.querySelectorAll('.remove-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      const card = this.closest('.friend-card');
+      if (card) {
+        card.remove();
+        checkEmpty();
+      }
+    });
+  });
+
+  // Initial check
+  checkEmpty();
+</script>
+
+</body>
+</html>

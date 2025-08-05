@@ -1,0 +1,77 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f6f6f6;
+}
+
+.search-container {
+    max-width: 400px;
+    margin: auto;
+    background-color: white;
+    border-radius: 25px 25px 0 0;
+    overflow: hidden;
+}
+
+.search-header {
+    background: url("{% static 'recipeapp/images/search-bg.jpg' %}") no-repeat center center/cover;
+    padding: 40px 20px 80px;
+    position: relative;
+    color: white;
+}
+
+.back-button {
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.search-header h2 {
+    margin-top: 30px;
+    font-size: 22px;
+}
+
+.search-bar {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    border: none;
+    outline: none;
+}
+
+.search-options {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    transition: background 0.3s;
+}
+
+.option:hover {
+    background-color: #e0e0e0;
+}
+
+.explore-link {
+    text-align: center;
+    padding: 15px;
+}
+
+.explore {
+    color: #2ecc71;
+    text-decoration: none;
+    font-weight: bold;
+}
